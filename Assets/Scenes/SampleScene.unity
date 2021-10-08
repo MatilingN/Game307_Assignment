@@ -1607,7 +1607,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 10
   slowingDistance: 15
-  stoppingDistance: 5
+  stoppingDistance: 8
   retreatDistance: 3
 --- !u!65 &2131147050
 BoxCollider:

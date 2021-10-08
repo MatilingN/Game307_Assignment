@@ -18,6 +18,8 @@ public class Enemy : MonoBehaviour
     private Transform obstacle2;
     private Transform obstacle3;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -33,42 +35,57 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float objectdistance = Vector3.Distance(transform.position, obstacle.position);
+        float objectdistance2 = Vector3.Distance(transform.position, obstacle1.position);
+        float objectdistance3 = Vector3.Distance(transform.position, obstacle2.position);
+        float objectdistance4 = Vector3.Distance(transform.position, obstacle3.position);
+        float distance = Vector3.Distance(transform.position, player.position);
+
         //Here the "Enemy" avoids the obstacles if it comes too close
-        if(Vector3.Distance(transform.position, obstacle.position) < retreatDistance)
+        if (objectdistance < retreatDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, obstacle.position, -speed * Time.deltaTime);
         }
-        else if (Vector3.Distance(transform.position, obstacle1.position) < retreatDistance)
+        else if (objectdistance2 < retreatDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, obstacle1.position, -speed * Time.deltaTime);
         }
-        else if (Vector3.Distance(transform.position, obstacle2.position) < retreatDistance)
+        else if (objectdistance3 < retreatDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, obstacle2.position, -speed * Time.deltaTime);
         }
-        else if (Vector3.Distance(transform.position, obstacle3.position) < retreatDistance)
+        else if (objectdistance4 < retreatDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, obstacle3.position, -speed * Time.deltaTime);
         }
 
+
         //Here the "Enemy" chases the player
-        if (Vector3.Distance(transform.position, player.position) > slowingDistance)
+        if (distance > slowingDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
         }
         //If the "Enemy" comes close it starts slowing down
-        else if(Vector3.Distance(transform.position, player.position) < slowingDistance && Vector3.Distance(transform.position, player.position) > stoppingDistance)
+        else if(distance < slowingDistance && distance > stoppingDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.position, 
-                (speed * Vector3.Distance(transform.position, player.position) / slowingDistance) * Time.deltaTime);
+                (speed * distance / slowingDistance) * Time.deltaTime);
         }
         //If the "Enemy" comes too close it stops completely
-        else if( Vector3.Distance(transform.position, player.position) < stoppingDistance && Vector3.Distance(transform.position, player.position) > retreatDistance)
+        else if(distance < stoppingDistance && distance > retreatDistance)
         {
-            transform.position = this.transform.position;
+            if (distance > 4)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, player.position, 0.5f * (speed * distance / slowingDistance) * Time.deltaTime);
+            } 
+            
+            if(distance <= 4.0f)
+            {
+                transform.position = this.transform.position;
+            }
         }
         //If the "Enemy" enters the retreat distance it starts to retreat
-        else if(Vector3.Distance(transform.position, player.position) < retreatDistance)
+        else if(distance < retreatDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.position, -speed * Time.deltaTime);
         }
