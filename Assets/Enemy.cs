@@ -44,6 +44,19 @@ public class Enemy : MonoBehaviour
         float distance = Vector3.Distance(transform.position, player.position);
 
 
+        //Determine in which direction to rotate towards
+        Vector3 targetDirection = player.position - transform.position;
+
+        //Here the speed at which the AI rotates is locked to its movement speed
+        float rotationSpeed = speed * Time.deltaTime;
+
+        //Rotate the forward vector towards the target direction
+        Vector3 newDirection = Vector3.RotateTowards(transform.forward, targetDirection, rotationSpeed, 0.0f);
+
+        //Here we calculate the rotation and apply rotation to the AI
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(newDirection), 0.15f);
+
+        
         //Here the AI avoids the obstacles if it comes too close
         if (objectdistance < retreatDistance)
         {
@@ -99,5 +112,7 @@ public class Enemy : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, player.position, 
                 -speed * Time.deltaTime);
         }
+
+
     }
 }
