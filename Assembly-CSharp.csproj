@@ -58,7 +58,6 @@
   <ItemGroup>
     <Compile Include="Assets\CharacterMovement.cs" />
     <Compile Include="Assets\Enemy.cs" />
-    <Compile Include="Assets\ObstacleAvoidance.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

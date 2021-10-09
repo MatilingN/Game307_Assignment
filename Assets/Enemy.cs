@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour
     public float stoppingDistance;
     public float retreatDistance;
 
-    //The player that the enemy has to chase and all the obstacles to avoid crashing into
+    //The player that the AI has to chase and all the obstacles to avoid crashing into
     //Need help with this part, dont know how to make it so that it only requires one obstacle for all four spheres
     //Doesn't work if I just copy/paste multiple obstacles and just add the same tag, tried
     private Transform player;
@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Here the game finds all the tags and makes it so that the "Enemy" can interact with them
+        //Here the game finds all the tags and makes it so that the AI can interact with them
         player = GameObject.FindGameObjectWithTag("Player").transform;
 
         obstacle  = GameObject.FindGameObjectWithTag("Obstacle0").transform;
@@ -35,48 +35,57 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Here we get the distance between the AI and the obstacles and the player
         float objectdistance = Vector3.Distance(transform.position, obstacle.position);
         float objectdistance2 = Vector3.Distance(transform.position, obstacle1.position);
         float objectdistance3 = Vector3.Distance(transform.position, obstacle2.position);
         float objectdistance4 = Vector3.Distance(transform.position, obstacle3.position);
+
         float distance = Vector3.Distance(transform.position, player.position);
 
-        //Here the "Enemy" avoids the obstacles if it comes too close
+
+        //Here the AI avoids the obstacles if it comes too close
         if (objectdistance < retreatDistance)
         {
-            transform.position = Vector3.MoveTowards(transform.position, obstacle.position, -speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, obstacle.position, 
+                -speed * Time.deltaTime);
         }
         else if (objectdistance2 < retreatDistance)
         {
-            transform.position = Vector3.MoveTowards(transform.position, obstacle1.position, -speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, obstacle1.position, 
+                -speed * Time.deltaTime);
         }
         else if (objectdistance3 < retreatDistance)
         {
-            transform.position = Vector3.MoveTowards(transform.position, obstacle2.position, -speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, obstacle2.position, 
+                -speed * Time.deltaTime);
         }
         else if (objectdistance4 < retreatDistance)
         {
-            transform.position = Vector3.MoveTowards(transform.position, obstacle3.position, -speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, obstacle3.position, 
+                -speed * Time.deltaTime);
         }
 
 
-        //Here the "Enemy" chases the player
+        //Here the AI chases the player
         if (distance > slowingDistance)
         {
-            transform.position = Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, player.position, 
+                speed * Time.deltaTime);
         }
-        //If the "Enemy" comes close it starts slowing down
-        else if(distance < slowingDistance && distance > stoppingDistance)
+        //If the AI comes close it starts slowing down
+        else if (distance < slowingDistance && distance > stoppingDistance)
         {
             transform.position = Vector3.MoveTowards(transform.position, player.position, 
-                (speed * distance / slowingDistance) * Time.deltaTime);
+                (speed * distance / slowingDistance) * 0.75f * Time.deltaTime);
         }
-        //If the "Enemy" comes too close it stops completely
-        else if(distance < stoppingDistance && distance > retreatDistance)
+        //If the AI comes too close it stops completely
+        else if (distance < stoppingDistance && distance > retreatDistance)
         {
-            if (distance > 4)
+            if (distance > 4 && distance < stoppingDistance)
             {
-                transform.position = Vector3.MoveTowards(transform.position, player.position, 0.5f * (speed * distance / slowingDistance) * Time.deltaTime);
+                transform.position = Vector3.MoveTowards(transform.position, player.position, 
+                    (speed * distance / slowingDistance) * 0.5f * Time.deltaTime);
             } 
             
             if(distance <= 4.0f)
@@ -84,10 +93,11 @@ public class Enemy : MonoBehaviour
                 transform.position = this.transform.position;
             }
         }
-        //If the "Enemy" enters the retreat distance it starts to retreat
-        else if(distance < retreatDistance)
+        //If the AI enters the retreat distance it starts to retreat
+        else if (distance < retreatDistance)
         {
-            transform.position = Vector3.MoveTowards(transform.position, player.position, -speed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, player.position, 
+                -speed * Time.deltaTime);
         }
     }
 }
